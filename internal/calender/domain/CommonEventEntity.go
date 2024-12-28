@@ -1,6 +1,6 @@
 package domain
 
-type External struct {
+type CommonEvent struct {
 	Id              string `json:"id"`
 	Title           string `json:"title"`
 	BackgroundColor string `json:"backgroundColor"`

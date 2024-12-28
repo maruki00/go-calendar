@@ -22,7 +22,7 @@ func NewEventRepository(db *pkg.DBHandler) *EventRepository {
 func (obj *EventRepository) Home(ctx context.Context) (map[string][]domain.Event, error) {
 	res := make(map[string][]domain.Event, 0)
 
-	sqlCommunEvents := `SELECT id,title,start_at,end_at,all_day,background_color,border_color,css from FROM external_events`
+	sqlCommunEvents := `SELECT id,title,start_at,end_at,all_day,background_color,border_color,css from FROM common_events`
 	sqlTodayEvents := `SELECT  id,title,start_at,end_at,all_day,background_color,border_color,css from  
 											FROM events
 											WHERE DATE(end_at) <= DATE('now')
@@ -37,18 +37,18 @@ func (obj *EventRepository) Home(ctx context.Context) (map[string][]domain.Event
 		return nil, err
 	}
 
-	res["external_events"] = getEvents(rows1)
+	res["common_events"] = getEvents(rows1)
 	res["toddday_events"] = getEvents(rows2)
 
 	return res, nil
 
 }
-func (obj *EventRepository) CreateExternalEvent(ctx context.Context, event domain.Event) (any, error) {
+func (obj *EventRepository) CreateCommonEvent(ctx context.Context, event domain.CommonEvent) (any, error) {
 	sql := `
-						INSERT INTO external_events (id, title, start_at, end_at, background_color, border_color, all_day, css) 
+						INSERT INTO common_events (id, title, background_color, border_color) 
 						VALUES (?,?,?,?,?,?,?,?)
 	`
-	_, err := obj.db.GetDB().Exec(sql, event.Id, event.Title, event.StartAt, event.EndAt, event.BackgroundColor, event.BorderColor, event.AllDay, event.Css)
+	_, err := obj.db.GetDB().Exec(sql, event.Id, event.Title, event.BackgroundColor, event.BorderColor)
 	if err != nil {
 		return nil, err
 	}
@@ -99,9 +99,9 @@ func (obj *EventRepository) Delete(ctx context.Context, id string) (any, error) 
 	return true, nil
 }
 
-func (obj *EventRepository) DeleteCommunEvent(ctx context.Context, id string) (any, error) {
+func (obj *EventRepository) DeleteCommonEvent(ctx context.Context, id string) (any, error) {
 
-	sql := "DELETE FROM external_events WHERE id  = ?"
+	sql := "DELETE FROM common_events WHERE id  = ?"
 	_, err := obj.db.GetDB().Exec(sql, id)
 	if err != nil {
 		return nil, err

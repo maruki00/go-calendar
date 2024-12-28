@@ -134,24 +134,46 @@ func (o *EventController) Update(ctx *gin.Context) {
 }
 
 func (o *EventController) Get(ctx *gin.Context) {
-	// req := new(requests.GetRequest)
-	// if err := ctx.BindJSON(req); err != nil {
-	// 	ctx.JSON(400, gin.H{
-	// 		"status":  "error",
-	// 		"message": err.Error(),
-	// 		"data":    nil,
-	// 	})
-	// 	return
-	// }
 
-	// if err := o.validator.Struct(req); err != nil {
-	// 	ctx.JSON(400, gin.H{
-	// 		"status":  "error",
-	// 		"message": err.Error(),
-	// 		"data":    nil,
-	// 	})
-	// 	return
-	// }
+	res, err := o.srvc.Get(ctx, nil)
+	if err != nil {
+		ctx.JSON(400, gin.H{
+			"status":  "error",
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
+	ctx.JSON(200, gin.H{
+		"status":  "success",
+		"message": nil,
+		"data":    res,
+	})
+
+}
+
+func (o *EventController) CreateCommon(ctx *gin.Context) {
+
+	res, err := o.srvc.Get(ctx, nil)
+	if err != nil {
+		ctx.JSON(400, gin.H{
+			"status":  "error",
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
+	ctx.JSON(200, gin.H{
+		"status":  "success",
+		"message": nil,
+		"data":    res,
+	})
+
+}
+
+func (o *EventController) DeleteCommon(ctx *gin.Context) {
 
 	res, err := o.srvc.Get(ctx, nil)
 	if err != nil {

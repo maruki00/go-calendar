@@ -38,15 +38,11 @@ func (srv *EventService) Create(ctx context.Context, req *requests.CreateRequest
 func (srv *EventService) CreateCommunEvent(ctx context.Context, req *requests.CreateRequest) (any, error) {
 	_ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	return srv.repo.CreateExternalEvent(_ctx, domain.Event{
+	return srv.repo.CreateExternalEvent(_ctx, domain.CommonEvent{
 		Id:              uuid.NewString(),
 		Title:           req.Title,
-		StartAt:         req.StartAt,
-		EndAt:           req.EndAt,
-		AllDay:          req.AllDay,
 		BackgroundColor: req.BackgroundColor,
 		BorderColor:     req.BorderColor,
-		Css:             req.Css,
 	})
 }
 
