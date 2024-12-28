@@ -1,0 +1,32 @@
+meta {
+  name: Update
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:5600/api/v1/event/update
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+  : 
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiZG9AbWFpbC5jb20iLCJleHAiOjE3MjM4MDMzMTAsImZ1bGxuYW1lIjoiYWJkZWxsYWggb3VsYWh5YW5lIn0.tw8_POTewDgtngFqdXeNFGYBpd3WjO3pFRkymBwkxtQ
+}
+
+body:json {
+  {
+    "id":"08d6bfd9-1ea9-4631-82fd-c226ebf18720",
+    "fields":{  
+  
+      "title": "title updated with error",
+      "end_at": "2024-12-31T15:04:05"
+    }
+  }
+  
+}

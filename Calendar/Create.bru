@@ -1,0 +1,33 @@
+meta {
+  name: Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:5600/api/v1/event/create
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+  : 
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiZG9AbWFpbC5jb20iLCJleHAiOjE3MjM4MDMzMTAsImZ1bGxuYW1lIjoiYWJkZWxsYWggb3VsYWh5YW5lIn0.tw8_POTewDgtngFqdXeNFGYBpd3WjO3pFRkymBwkxtQ
+}
+
+body:json {
+  {
+    "title":"hello world",
+    "start_at":"2024-12-21T15:04:05Z",
+    "end_at":"2024-12-23T15:04:05Z",
+    "background_color":"black",
+    "border_color":"green",
+    "all_day":true,
+    "css":"black"
+  }
+  
+}
