@@ -12,12 +12,12 @@ package domain
 */
 
 type Event struct {
-	Id              string `yaml:"id" json:"id,omitempty"`
-	Title           string `yaml:"title" json:"title"`
-	StartAt         string `yaml:"start_at" json:"start_at,omitempty"`
-	EndAt           string `yaml:"end_at" json:"end_at,omitempty"`
-	AllDay          bool   `yaml:"all_day" json:"all_day,omitempty"`
-	BackgroundColor string `yaml:"background_color" json:"background_color,omitempty"`
-	BorderColor     string `yaml:"border_color" json:"border_color,omitempty"`
-	Css             string `yaml:"css" json:"css,omitempty"`
+	Id              string `json:"id"`
+	Title           string `json:"title"`
+	StartAt         string `json:"start"`
+	EndAt           string `json:"end"`
+	BackgroundColor string `json:"backgroundColor"`
+	BorderColor     string `json:"borderColor"`
+	AllDay          bool   `json:"allDay"`
+	Css             string `json:"css"`
 }

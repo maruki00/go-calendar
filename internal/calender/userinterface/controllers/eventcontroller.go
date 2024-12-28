@@ -93,7 +93,6 @@ func (o *EventController) Delete(ctx *gin.Context) {
 		"data":    res,
 	})
 
-
 }
 
 func (o *EventController) Update(ctx *gin.Context) {
@@ -132,30 +131,29 @@ func (o *EventController) Update(ctx *gin.Context) {
 		"data":    res,
 	})
 
-
 }
 
 func (o *EventController) Get(ctx *gin.Context) {
-	req := new(requests.GetRequest)
-	if err := ctx.BindJSON(req); err != nil {
-		ctx.JSON(400, gin.H{
-			"status":  "error",
-			"message": err.Error(),
-			"data":    nil,
-		})
-		return
-	}
+	// req := new(requests.GetRequest)
+	// if err := ctx.BindJSON(req); err != nil {
+	// 	ctx.JSON(400, gin.H{
+	// 		"status":  "error",
+	// 		"message": err.Error(),
+	// 		"data":    nil,
+	// 	})
+	// 	return
+	// }
 
-	if err := o.validator.Struct(req); err != nil {
-		ctx.JSON(400, gin.H{
-			"status":  "error",
-			"message": err.Error(),
-			"data":    nil,
-		})
-		return
-	}
+	// if err := o.validator.Struct(req); err != nil {
+	// 	ctx.JSON(400, gin.H{
+	// 		"status":  "error",
+	// 		"message": err.Error(),
+	// 		"data":    nil,
+	// 	})
+	// 	return
+	// }
 
-	res, err := o.srvc.Get(ctx, req)
+	res, err := o.srvc.Get(ctx, nil)
 	if err != nil {
 		ctx.JSON(400, gin.H{
 			"status":  "error",
@@ -170,6 +168,5 @@ func (o *EventController) Get(ctx *gin.Context) {
 		"message": nil,
 		"data":    res,
 	})
-
 
 }

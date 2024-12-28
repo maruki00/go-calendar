@@ -38,7 +38,7 @@ func (srv *EventService) Create(ctx context.Context, req *requests.CreateRequest
 func (srv *EventService) CreateCommunEvent(ctx context.Context, req *requests.CreateRequest) (any, error) {
 	_ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	return srv.repo.CreateCommunEvent(_ctx, domain.Event{
+	return srv.repo.CreateExternalEvent(_ctx, domain.Event{
 		Id:              uuid.NewString(),
 		Title:           req.Title,
 		StartAt:         req.StartAt,
