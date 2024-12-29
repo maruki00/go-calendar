@@ -19,5 +19,4 @@ type Event struct {
 	BackgroundColor string `json:"backgroundColor"`
 	BorderColor     string `json:"borderColor"`
 	AllDay          bool   `json:"allDay"`
-	Css             string `json:"css"`
 }

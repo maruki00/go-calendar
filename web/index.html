@@ -15,6 +15,28 @@
   <link rel="stylesheet" href="./plugins/fullcalendar/main.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="./dist/css/adminlte.min.css">
+  <style>
+    .delete-button {
+      background-color: transparent;
+      font-size: xx-small;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 20px;
+      text-align: center;
+      line-height: 16px;
+      position: absolute;
+      top: 0px;
+      right: 0px;
+    }
+
+    /* Optional: Add hover effect for better UX */
+    .delete-button:hover {
+      background-color: darkred;
+    }
+  </style>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -32,11 +54,11 @@
                 <div class="card-body">
                   <!-- the events -->
                   <div id="external-events">
-                    <div class="external-event bg-success">Lunch</div>
+                    <!-- <div class="external-event bg-success">Lunch</div>
                     <div class="external-event bg-warning">Go home</div>
                     <div class="external-event bg-info">Do homework</div>
                     <div class="external-event bg-primary">Work on UI design</div>
-                    <div class="external-event bg-danger">Sleep tight</div>
+                    <div class="external-event bg-danger">Sleep tight</div> -->
                     <div class="checkbox">
                       <label for="drop-remove">
                         <input type="checkbox" id="drop-remove">
@@ -109,7 +131,7 @@
 
       function rgbToHex(rgb) {
         // If it's RGBA, remove the alpha part (we only want RGB)
-        if (rgb.indexOf("rgba") !== -1) {
+        if (rgb.indexOf("rgb") !== -1) {
           rgb = rgb.substring(5, rgb.length - 1);
         }
 
@@ -139,9 +161,7 @@
           return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
       }
-
       var _events = [];
-
       const request = async (url, postData) => {
         if (postData != null) {
           postData = JSON.stringify(postData);
@@ -163,16 +183,47 @@
           });
       }
 
+      const FillEvents = (events) => {
+        var eventsContainer = $("#external-events");
+
+        // Loop through each event and create a new div element for it
+        events?.map(e => {
+          var event = $('<div>');  // Create a new div element
+          event.attr("id", e.id)
+          event.css({
+            'background-color': e.backgroundColor,
+            'border-color': e.borderColor,
+            'color': '#fff'
+          }).addClass('external-event');  // Add the 'external-event' class
+
+          event.text(e.title);  // Set the event's title as the text inside the div
+
+          // Append the newly created event div to the events container
+          eventsContainer.prepend(event);
+        });
+      };
+
       const Home = async () => {
         const resp = await request("http://127.0.0.1:5600/api/v1/events", null);
         if (resp && resp.data) {
-          _events = resp.data;
+          _events = resp.data.events || [];
+          FillEvents(resp.data?.common_events)
           console.log("API data result: ", resp.data, _events);
           initializeCalendar(); // Initialize the calendar after loading events
         } else {
           console.error("Failed to load events");
         }
       }
+
+      const CreateEvent = async (event) => {
+        const resp = await request("http://127.0.0.1:5600/api/v1/event/create", event);
+        if (resp && resp.data) {
+          alert("Done")
+        } else {
+          console.error("Failed to load events");
+        }
+      }
+
 
       const initializeCalendar = () => {
         var date = new Date();
@@ -210,59 +261,80 @@
           events: _events.map(event => ({
             id: event.id,
             title: event.title,
+            backgroundColor: event.backgroundColor,
+            borderColor: event.borderColor,
             start: event.start,
             end: event.end,
-            description: event.description || '',
-            css: event.css
           })),
           editable: true,
           droppable: true,
-          drop: function (info, b, c) {
+          drop: function (info) {
             var title = info.draggedEl.innerText
 
             var draggedEvent = info.draggedEl;  // The dragged element
             var backgroundColor = window.getComputedStyle(draggedEvent, null).getPropertyValue('background-color');
-            var textColor = window.getComputedStyle(draggedEvent, null).getPropertyValue('color');
-
-            console.log("Dropped event background color:", backgroundColor);  // Logs the background color
-            console.log("Dropped event text color:", textColor);  // Logs the text color
-
-
-
-            const data = {
-              allDay: true,
-              backgroundColor: "",
-              borderColor: "",
-              end: info.dateStr,
-              id: UUID(),
-              start: info.dateStr,
+            console.log("color back ", backgroundColor)
+            const event = {
               title: title,
+              backgroundColor: backgroundColor,
+              borderColor: backgroundColor,
+              start: info.dateStr,
+              end: info.dateStr,
+              css: "",
             }
-
-            console.log("data : ", data)
-
-
             if (checkbox.checked) {
+              request("http://127.0.0.1:5600/api/v1/event/common/delete", { "id": info.draggedEl.id })
               info.draggedEl.parentNode.removeChild(info.draggedEl);
-              console.log("hello world --", info);
-            } else {
-              console.log("hello world --", info);
             }
+            CreateEvent(event)
           },
           eventDrop: function (event, delta, revertFunc) {
             var startDate = event.event.start;
             var endDate = event.event.end ? event.event.end : startDate;
-            console.log('Event dropped');
-            console.log('Start Date:', startDate);
-            console.log('End Date:', endDate);
+            const data = {
+              "id": event.event.id,
+              "fields": {
+                "start_at": moment(startDate, 'YYYY-MM-DD').format('YYYY-MM-DD'),
+                "end_at": moment(endDate, 'YYYY-MM-DD').format('YYYY-MM-DD')
+              }
+            }
+            request("http://localhost:5600/api/v1/event/update", data)
           },
           eventResize: function (event, delta, revertFunc) {
             var startDate = event.event.start;
             var endDate = event.event.end ? event.event.end : startDate;
-            console.log('Event resized');
-            console.log('Start Date:', startDate);
-            console.log('End Date:', endDate);
+            const data = {
+              "id": event.event.id,
+              "fields": {
+                "start_at": moment(startDate, 'YYYY-MM-DD').format('YYYY-MM-DD'),
+                "end_at": moment(endDate, 'YYYY-MM-DD').format('YYYY-MM-DD')
+              }
+            }
+            request("http://localhost:5600/api/v1/event/update", data)
           }
+
+          , eventContent: function (arg) {
+            var deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-button');
+            deleteButton.innerText = '×'; // Unicode for "times" character (cross)
+
+            // Event listener to remove the event on button click
+            deleteButton.addEventListener('click', function () {
+              if (confirm('Are you sure you want to delete this event?')) {
+                request("http://localhost:5600/api/v1/event/delete",{"id": arg.event.id})
+                calendar.getEventById(arg.event.id).remove();
+              }
+            });
+
+            var eventContent = document.createElement('div');
+            eventContent.innerHTML = arg.event.title;
+            eventContent.style.position = 'relative'; // Ensure delete button positions correctly
+
+            // Append the delete button to the event content
+            eventContent.appendChild(deleteButton);
+
+            return { domNodes: [eventContent] };
+          },
         });
 
         calendar.render();
@@ -297,13 +369,13 @@
         }).addClass('external-event');
         event.text(val);
         const data = {
-          id: UUID(),
+          // id: UUID(),
           title: val,
           allDay: true,
           backgroundColor: currColor,
-          borderColor:     currColor,
-          
-            }
+          borderColor: currColor,
+        }
+        request("http://localhost:5600/api/v1/event/common/create", data)
         $('#external-events').prepend(event);
 
         console.log("Event created: ", event);

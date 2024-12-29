@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calendar - Abdellah Oulahyane</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="./static/plugins/fontawesome-free/css/all.min.css">
+  <!-- fullCalendar -->
+  <link rel="stylesheet" href="./static/plugins/fullcalendar/main.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="./static/dist/css/adminlte.min.css">
+  <style>
+    .delete-button {
+      background-color: transparent;
+      font-size: xx-small;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 20px;
+      text-align: center;
+      line-height: 16px;
+      position: absolute;
+      top: 0px;
+      right: 0px;
+    }
+
+    /* Optional: Add hover effect for better UX */
+    .delete-button:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <div class="wrapper">
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="sticky-top mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">Draggable Events</h4>
+                </div>
+                <div class="card-body">
+                  <!-- the events -->
+                  <div id="external-events">
+                    <!-- <div class="external-event bg-success">Lunch</div>
+                    <div class="external-event bg-warning">Go home</div>
+                    <div class="external-event bg-info">Do homework</div>
+                    <div class="external-event bg-primary">Work on UI design</div>
+                    <div class="external-event bg-danger">Sleep tight</div> -->
+                    <div class="checkbox">
+                      <label for="drop-remove">
+                        <input type="checkbox" id="drop-remove">
+                        remove after drop
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Create Event</h3>
+                </div>
+                <div class="card-body">
+                  <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
+                    <ul class="fc-color-picker" id="color-chooser">
+                      <li><a class="text-primary" href="#"><i class="fas fa-square"></i></a></li>
+                      <li><a class="text-warning" href="#"><i class="fas fa-square"></i></a></li>
+                      <li><a class="text-success" href="#"><i class="fas fa-square"></i></a></li>
+                      <li><a class="text-danger" href="#"><i class="fas fa-square"></i></a></li>
+                      <li><a class="text-muted" href="#"><i class="fas fa-square"></i></a></li>
+                    </ul>
+                  </div>
+                  <!-- /btn-group -->
+                  <div class="input-group">
+                    <input id="new-event" type="text" class="form-control" placeholder="Event Title">
+
+                    <div class="input-group-append">
+                      <button id="add-new-event" type="button" class="btn btn-primary">Add</button>
+                    </div>
+                    <!-- /btn-group -->
+                  </div>
+                  <!-- /input-group -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-md-9">
+            <div class="card card-primary">
+              <div class="card-body p-0">
+                <!-- THE CALENDAR -->
+                <div id="calendar"></div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+
+
+
+  </div>
+
+  <script src="./static/plugins/jquery/jquery.min.js"></script>
+  <script src="./static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="./static/plugins/jquery-ui/jquery-ui.min.js"></script>
+  <script src="./static/plugins/moment/moment.min.js"></script>
+  <script src="./static/plugins/fullcalendar/main.js"></script>
+  <script>
+    $(function () {
+
+      function rgbToHex(rgb) {
+        // If it's RGBA, remove the alpha part (we only want RGB)
+        if (rgb.indexOf("rgb") !== -1) {
+          rgb = rgb.substring(5, rgb.length - 1);
+        }
+
+        // Split the rgb string into individual components (R, G, B)
+        var components = rgb.split(',');
+
+        // Convert each component to a two-character hexadecimal value
+        var r = parseInt(components[0].trim()).toString(16).padStart(2, '0');
+        var g = parseInt(components[1].trim()).toString(16).padStart(2, '0');
+        var b = parseInt(components[2].trim()).toString(16).padStart(2, '0');
+
+        // Return the hex color string
+        return `#${r}${g}${b}`;
+      }
+      function UUID() { // Public Domain/MIT
+        var d = new Date().getTime();//Timestamp
+        var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+          var r = Math.random() * 16;//random number between 0 and 16
+          if (d > 0) {//Use timestamp until depleted
+            r = (d + r) % 16 | 0;
+            d = Math.floor(d / 16);
+          } else {//Use microseconds since page-load if supported
+            r = (d2 + r) % 16 | 0;
+            d2 = Math.floor(d2 / 16);
+          }
+          return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+      }
+
+      var _events = [];
+      var _commons = [];
+
+      const request = async (url, postData) => {
+        if (postData != null) {
+          postData = JSON.stringify(postData);
+        }
+        return await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: postData
+        }).then(response => response.json())
+          .then(data => {
+            console.log("then success : ", data);
+            return data;
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            return null;
+          });
+      }
+
+      const FillEvents = (events) => {
+
+
+
+        var eventsContainer = $("#external-events");
+
+// Loop through each event and create a new div element for it
+events?.map(e => {
+    var event = $('<div>');  // Create a new div element
+    event.attr("id", e.id);  // Set the id attribute of the event div
+    event.css({
+        'background-color': e.backgroundColor,
+        'border-color': e.borderColor,
+        'color': '#fff'
+    }).addClass('external-event');  // Add the 'external-event' class
+
+    event.text(e.title);  // Set the event's title as the text inside the div
+
+    // Create the remove button
+    var removeButton = $('<button class="remove-event-btn">×</button>');  // Create a button with "×"
+    removeButton.css({
+        'background-color': 'red',
+        'color': 'white',
+        'border': 'none',
+        'border-radius': '50%',
+        'width': '20px',
+        'height': '20px',
+        'font-size': '14px',
+        'text-align': 'center',
+        'line-height': '16px',
+        'position': 'absolute',
+        'top': '5px',
+        'right': '5px',
+        'cursor': 'pointer'
+    });
+
+    // Append the remove button to the event div
+    event.append(removeButton);
+
+    // Add click event listener to remove the event
+    removeButton.on('click', function() {
+        // Remove the event div from the container
+        event.remove();
+
+        // Optionally, you can also remove the event data from your events array or database
+        // Example: removeEventById(e.id);
+    });
+
+    // Append the newly created event div to the events container
+    eventsContainer.prepend(event);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // var eventsContainer = $("#external-events");
+
+        // // Loop through each event and create a new div element for it
+        // events?.map(e => {
+        //   var event = $('<div>');  // Create a new div element
+        //   event.attr("id", e.id)
+        //   event.css({
+        //     'background-color': e.backgroundColor,
+        //     'border-color': e.borderColor,
+        //     'color': '#fff'
+        //   }).addClass('external-event');  // Add the 'external-event' class
+
+        //   event.text(e.title);  // Set the event's title as the text inside the div
+
+        //   // Append the newly created event div to the events container
+        //   eventsContainer.prepend(event);
+        // });
+      };
+
+      const Home = async () => {
+        const resp = await request("http://127.0.0.1:5600/api/v1/events", null);
+        if (resp && resp.data) {
+          _events = resp.data.events || [];
+          FillEvents(resp.data?.common_events)
+          console.log("API data result: ", resp.data, _events);
+          initializeCalendar(); 
+        } else {
+          console.error("Failed to load events");
+        }
+      }
+
+      const CreateEvent = async (event) => {
+        const resp = await request("http://127.0.0.1:5600/api/v1/event/create", event);
+        if (!(resp && resp.data)) {
+          console.error("Failed to load events");
+        }
+      }
+
+
+      const initializeCalendar = () => {
+        var date = new Date();
+        var d = date.getDate(),
+          m = date.getMonth(),
+          y = date.getFullYear();
+
+        var Calendar = FullCalendar.Calendar;
+        var Draggable = FullCalendar.Draggable;
+
+        var containerEl = document.getElementById('external-events');
+        var checkbox = document.getElementById('drop-remove');
+        var calendarEl = document.getElementById('calendar');
+
+        new Draggable(containerEl, {
+          itemSelector: '.external-event',
+          eventData: function (eventEl) {
+            return {
+              title: eventEl.innerText,
+              backgroundColor: window.getComputedStyle(eventEl, null).getPropertyValue('background-color'),
+              borderColor: window.getComputedStyle(eventEl, null).getPropertyValue('background-color'),
+              textColor: window.getComputedStyle(eventEl, null).getPropertyValue('color'),
+              id: UUID(),
+            };
+          }
+        });
+
+        var calendar = new Calendar(calendarEl, {
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          },
+          themeSystem: 'bootstrap',
+          events: _events.map(event => ({
+            id: event.id,
+            title: event.title,
+            backgroundColor: event.backgroundColor,
+            borderColor: event.borderColor,
+            start: event.start,
+            end: event.end,
+          })),
+          editable: true,
+          droppable: true,
+          drop: function (info) {
+            var title = info.draggedEl.innerText
+
+            var draggedEvent = info.draggedEl;  // The dragged element
+            var backgroundColor = window.getComputedStyle(draggedEvent, null).getPropertyValue('background-color');
+            console.log("color back ", backgroundColor)
+            const event = {
+              title: title,
+              backgroundColor: backgroundColor,
+              borderColor: backgroundColor,
+              start: info.dateStr,
+              end: info.dateStr,
+              css: "",
+            }
+            if (checkbox.checked) {
+              request("http://127.0.0.1:5600/api/v1/event/common/delete", { "id": info.draggedEl.id })
+              info.draggedEl.parentNode.removeChild(info.draggedEl);
+            }
+            CreateEvent(event)
+          },
+          eventDrop: function (event, delta, revertFunc) {
+            var startDate = event.event.start;
+            var endDate = event.event.end ? event.event.end : startDate;
+            const data = {
+              "id": event.event.id,
+              "fields": {
+                "start_at": moment(startDate, 'YYYY-MM-DD').format('YYYY-MM-DD'),
+                "end_at": moment(endDate, 'YYYY-MM-DD').format('YYYY-MM-DD')
+              }
+            }
+            request("http://localhost:5600/api/v1/event/update", data)
+          },
+          eventResize: function (event, delta, revertFunc) {
+            var startDate = event.event.start;
+            var endDate = event.event.end ? event.event.end : startDate;
+            const data = {
+              "id": event.event.id,
+              "fields": {
+                "start_at": moment(startDate, 'YYYY-MM-DD').format('YYYY-MM-DD'),
+                "end_at": moment(endDate, 'YYYY-MM-DD').format('YYYY-MM-DD')
+              }
+            }
+            request("http://localhost:5600/api/v1/event/update", data)
+          }
+
+          , eventContent: function (arg) {
+            var deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-button');
+            deleteButton.innerText = '×'; // Unicode for "times" character (cross)
+
+            // Event listener to remove the event on button click
+            deleteButton.addEventListener('click', function () {
+              if (confirm('Are you sure you want to delete this event?')) {
+                request("http://localhost:5600/api/v1/event/delete", { "id": arg.event.id })
+                calendar.getEventById(arg.event.id).remove();
+              }
+            });
+
+            var eventContent = document.createElement('div');
+            eventContent.innerHTML = arg.event.title;
+            eventContent.style.position = 'relative'; // Ensure delete button positions correctly
+
+            // Append the delete button to the event content
+            eventContent.appendChild(deleteButton);
+
+            return { domNodes: [eventContent] };
+          },
+        });
+
+        calendar.render();
+      }
+
+      Home();
+
+      var currColor = '#3c8dbc'; // Red by default
+
+      $('#color-chooser > li > a').click(function (e) {
+        e.preventDefault();
+        console.log(";line 247")
+        currColor = $(this).css('color');
+        $('#add-new-event').css({
+          'background-color': currColor,
+          'border-color': currColor
+        });
+      });
+
+      $('#add-new-event').click(function (e) {
+        e.preventDefault();
+        var val = $('#new-event').val();
+        if (val.length == 0) {
+          return;
+        }
+
+        var event = $('<div />');
+        event.css({
+          'background-color': currColor,
+          'border-color': currColor,
+          'color': '#fff'
+        }).addClass('external-event');
+        event.text(val);
+        const data = {
+          // id: UUID(),
+          title: val,
+          allDay: true,
+          backgroundColor: currColor,
+          borderColor: currColor,
+        }
+        request("http://localhost:5600/api/v1/event/common/create", data)
+        $('#external-events').prepend(event);
+
+        console.log("Event created: ", event);
+        ini_events(event);
+        $('#new-event').val('');
+      });
+
+      function ini_events(ele) {
+        ele.each(function () {
+          var eventObject = {
+            title: $.trim($(this).text())
+          };
+          $(this).data('eventObject', eventObject);
+
+          $(this).draggable({
+            zIndex: 1070,
+            revert: true,
+            revertDuration: 0
+          });
+        });
+      }
+
+      ini_events($('#external-events div.external-event'));
+    });
+  </script>
+
+</body>
+
+</html>

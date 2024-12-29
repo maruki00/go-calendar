@@ -19,14 +19,16 @@ func NewEventRepository(db *pkg.DBHandler) *EventRepository {
 	}
 }
 
-func (obj *EventRepository) Home(ctx context.Context) (map[string][]domain.Event, error) {
-	res := make(map[string][]domain.Event, 0)
+func (obj *EventRepository) Home(ctx context.Context) (any, error) {
+	res := make(map[string]any, 0)
 
-	sqlCommunEvents := `SELECT id,title,start_at,end_at,all_day,background_color,border_color,css from FROM common_events`
-	sqlTodayEvents := `SELECT  id,title,start_at,end_at,all_day,background_color,border_color,css from  
-											FROM events
-											WHERE DATE(end_at) <= DATE('now')
-											AND DATE(start_at) >= DATE('now');
+	sqlCommunEvents := `SELECT *  
+						FROM common_events`
+	sqlTodayEvents := `	SELECT id, title, start_at, end_at, background_color, border_color, all_day
+				 		FROM events 
+						WHERE strftime('%Y-%m', start_at) = strftime('%Y-%m', 'now') 
+						OR strftime('%Y-%m', end_at) = strftime('%Y-%m', 'now') 
+						OR (start_at <= 'now' AND end_at >= 'now')
 	`
 	rows1, err := obj.db.GetDB().Query(sqlCommunEvents)
 	if err != nil {
@@ -37,8 +39,8 @@ func (obj *EventRepository) Home(ctx context.Context) (map[string][]domain.Event
 		return nil, err
 	}
 
-	res["common_events"] = getEvents(rows1)
-	res["toddday_events"] = getEvents(rows2)
+	res["common_events"] = getCommonEvents(rows1)
+	res["events"] = getEvents(rows2)
 
 	return res, nil
 
@@ -46,7 +48,7 @@ func (obj *EventRepository) Home(ctx context.Context) (map[string][]domain.Event
 func (obj *EventRepository) CreateCommonEvent(ctx context.Context, event domain.CommonEvent) (any, error) {
 	sql := `
 						INSERT INTO common_events (id, title, background_color, border_color) 
-						VALUES (?,?,?,?,?,?,?,?)
+						VALUES (?,?,?,?)
 	`
 	_, err := obj.db.GetDB().Exec(sql, event.Id, event.Title, event.BackgroundColor, event.BorderColor)
 	if err != nil {
@@ -57,10 +59,10 @@ func (obj *EventRepository) CreateCommonEvent(ctx context.Context, event domain.
 
 func (obj *EventRepository) Create(ctx context.Context, event domain.Event) (any, error) {
 	sql := `
-						INSERT INTO events (id, title, start_at, end_at, background_color, border_color, all_day, css) 
-						VALUES (?,?,?,?,?,?,?,?)
+						INSERT INTO events (id, title, start_at, end_at, background_color, border_color, all_day) 
+						VALUES (?,?,?,?,?,?,?)
 	`
-	_, err := obj.db.GetDB().Exec(sql, event.Id, event.Title, event.StartAt, event.EndAt, event.BackgroundColor, event.BorderColor, event.AllDay, event.Css)
+	_, err := obj.db.GetDB().Exec(sql, event.Id, event.Title, event.StartAt, event.EndAt, event.BackgroundColor, event.BorderColor, event.AllDay)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +112,7 @@ func (obj *EventRepository) DeleteCommonEvent(ctx context.Context, id string) (a
 }
 
 func (obj *EventRepository) GetAll(ctx context.Context) ([]domain.Event, error) {
-	sql := "select id,title,start_at,end_at,all_day,background_color,border_color,css from events"
+	sql := "select id,title,start_at,end_at,all_day,background_color,border_color, from events"
 	rows, err := obj.db.GetDB().Query(sql)
 	if err != nil {
 		return nil, err
@@ -124,7 +126,19 @@ func getEvents(rows *sql.Rows) []domain.Event {
 	events := make([]domain.Event, 0)
 	for rows.Next() {
 		event := domain.Event{}
-		rows.Scan(&event.Id, &event.Title, &event.StartAt, &event.EndAt, &event.AllDay, &event.BackgroundColor, &event.BorderColor, &event.Css)
+		// id, title, start_at, end_at, background_color, border_color, all_day
+		rows.Scan(&event.Id, &event.Title, &event.StartAt, &event.EndAt, &event.BackgroundColor, &event.BorderColor, &event.AllDay)
+		events = append(events, event)
+	}
+	return events
+
+}
+
+func getCommonEvents(rows *sql.Rows) []domain.CommonEvent {
+	events := make([]domain.CommonEvent, 0)
+	for rows.Next() {
+		event := domain.CommonEvent{}
+		rows.Scan(&event.Id, &event.Title, &event.BackgroundColor, &event.BorderColor)
 		events = append(events, event)
 	}
 	return events

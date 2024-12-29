@@ -29,10 +29,9 @@ func (srv *EventService) Create(ctx context.Context, req *requests.CreateRequest
 		Title:           req.Title,
 		StartAt:         req.StartAt,
 		EndAt:           req.EndAt,
-		AllDay:          req.AllDay,
+		AllDay:          true,
 		BackgroundColor: req.BackgroundColor,
 		BorderColor:     req.BorderColor,
-		Css:             req.Css,
 	})
 }
 

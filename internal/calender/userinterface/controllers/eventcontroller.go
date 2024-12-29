@@ -92,7 +92,6 @@ func (o *EventController) Delete(ctx *gin.Context) {
 		"message": nil,
 		"data":    res,
 	})
-
 }
 
 func (o *EventController) Update(ctx *gin.Context) {
@@ -130,12 +129,10 @@ func (o *EventController) Update(ctx *gin.Context) {
 		"message": nil,
 		"data":    res,
 	})
-
 }
 
 func (o *EventController) Get(ctx *gin.Context) {
-
-	res, err := o.srvc.Get(ctx, nil)
+	res, err := o.srvc.Home(ctx, nil)
 	if err != nil {
 		ctx.JSON(400, gin.H{
 			"status":  "error",
@@ -150,12 +147,30 @@ func (o *EventController) Get(ctx *gin.Context) {
 		"message": nil,
 		"data":    res,
 	})
-
 }
 
 func (o *EventController) CreateCommon(ctx *gin.Context) {
 
-	res, err := o.srvc.Get(ctx, nil)
+	req := new(requests.CreateCommonRequest)
+	if err := ctx.BindJSON(req); err != nil {
+		ctx.JSON(400, gin.H{
+			"status":  "error",
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
+	if err := o.validator.Struct(req); err != nil {
+		ctx.JSON(400, gin.H{
+			"status":  "error",
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
+	res, err := o.srvc.CreateCommonEvent(ctx, req)
 	if err != nil {
 		ctx.JSON(400, gin.H{
 			"status":  "error",
@@ -170,12 +185,29 @@ func (o *EventController) CreateCommon(ctx *gin.Context) {
 		"message": nil,
 		"data":    res,
 	})
-
 }
 
 func (o *EventController) DeleteCommon(ctx *gin.Context) {
+	req := new(requests.DeleteCommonRequest)
+	if err := ctx.BindJSON(req); err != nil {
+		ctx.JSON(400, gin.H{
+			"status":  "error",
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
 
-	res, err := o.srvc.Get(ctx, nil)
+	if err := o.validator.Struct(req); err != nil {
+		ctx.JSON(400, gin.H{
+			"status":  "error",
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
+	res, err := o.srvc.DeleteCommunEvent(ctx, req)
 	if err != nil {
 		ctx.JSON(400, gin.H{
 			"status":  "error",
@@ -190,5 +222,4 @@ func (o *EventController) DeleteCommon(ctx *gin.Context) {
 		"message": nil,
 		"data":    res,
 	})
-
 }

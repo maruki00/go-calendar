@@ -6,6 +6,7 @@ import (
 	repositories "go-calendar/internal/calender/infra/Repositories"
 	"go-calendar/internal/calender/userinterface/controllers"
 	pkg "go-calendar/pkg/postgres"
+	"html/template"
 	"net/http"
 	"strings"
 
@@ -47,18 +48,27 @@ func CORS1() gin.HandlerFunc {
 }
 
 func main() {
+
 	db := pkg.NewDBHandler("../db/main.db")
 	repo := repositories.NewEventRepository(db)
 	srv := services.NewEventService(repo)
 	ctl := controllers.NewEventController(srv)
 	server := gin.Default()
-	server.Use(CORS())
+
+	html := template.Must(template.ParseFiles("index.html"))
+	server.SetHTMLTemplate(html)
+	server.Static("/static", "./static")
+
 	server.POST("/api/v1/event/create", ctl.Create)
 	server.POST("/api/v1/event/delete", ctl.Delete)
 	server.POST("/api/v1/event/update", ctl.Update)
 	server.POST("/api/v1/events", ctl.Get)
-	server.POST("/api/v1/events/common/create", ctl.CreateCommon)
-	server.POST("/api/v1/events/common/delete", ctl.DeleteCommon)
+	server.POST("/api/v1/event/common/create", ctl.CreateCommon)
+	server.POST("/api/v1/event/common/delete", ctl.DeleteCommon)
+	server.GET("/", func(ctx *gin.Context) {
+		ctx.HTML(http.StatusOK, "index.html", nil)
+	})
+
 	fmt.Println("server running on :5600")
 	server.Run(":5600")
 }
