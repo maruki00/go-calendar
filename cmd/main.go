@@ -47,7 +47,6 @@ func CORS1() gin.HandlerFunc {
 }
 
 func main() {
-
 	db := pkg.NewDBHandler("../db/main.db")
 	repo := repositories.NewEventRepository(db)
 	srv := services.NewEventService(repo)
@@ -58,6 +57,8 @@ func main() {
 	server.POST("/api/v1/event/delete", ctl.Delete)
 	server.POST("/api/v1/event/update", ctl.Update)
 	server.POST("/api/v1/events", ctl.Get)
+	server.POST("/api/v1/events/common/create", ctl.CreateCommon)
+	server.POST("/api/v1/events/common/delete", ctl.DeleteCommon)
 	fmt.Println("server running on :5600")
 	server.Run(":5600")
 }

@@ -35,10 +35,11 @@ func (srv *EventService) Create(ctx context.Context, req *requests.CreateRequest
 		Css:             req.Css,
 	})
 }
-func (srv *EventService) CreateCommunEvent(ctx context.Context, req *requests.CreateRequest) (any, error) {
+
+func (srv *EventService) CreateCommonEvent(ctx context.Context, req *requests.CreateCommonRequest) (any, error) {
 	_ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	return srv.repo.CreateExternalEvent(_ctx, domain.CommonEvent{
+	return srv.repo.CreateCommonEvent(_ctx, domain.CommonEvent{
 		Id:              uuid.NewString(),
 		Title:           req.Title,
 		BackgroundColor: req.BackgroundColor,
@@ -59,10 +60,11 @@ func (srv *EventService) Delete(ctx context.Context, req *requests.DeleteRequest
 	defer cancel()
 	return srv.repo.Delete(_ctx, req.Id)
 }
-func (srv *EventService) DeleteCommunEvent(ctx context.Context, req *requests.DeleteRequest) (any, error) {
+
+func (srv *EventService) DeleteCommunEvent(ctx context.Context, req *requests.DeleteCommonRequest) (any, error) {
 	_ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	return srv.repo.DeleteCommunEvent(_ctx, req.Id)
+	return srv.repo.DeleteCommonEvent(_ctx, req.Id)
 }
 
 // Get  
