@@ -54,11 +54,6 @@
                 <div class="card-body">
                   <!-- the events -->
                   <div id="external-events">
-                    <!-- <div class="external-event bg-success">Lunch</div>
-                    <div class="external-event bg-warning">Go home</div>
-                    <div class="external-event bg-info">Do homework</div>
-                    <div class="external-event bg-primary">Work on UI design</div>
-                    <div class="external-event bg-danger">Sleep tight</div> -->
                     <div class="checkbox">
                       <label for="drop-remove">
                         <input type="checkbox" id="drop-remove">
@@ -190,8 +185,8 @@
         var eventsContainer = $("#external-events");
         // Loop through each event and create a new div element for it
         events?.map(e => {
-          var event = $('<div>');  // Create a new div element
-          event.attr("id", e.id);  // Set the id attribute of the event div
+          var event = $('<div>');  
+          event.attr("id", e.id); 
           event.css({
             'background-color': e.backgroundColor,
             'border-color': e.borderColor,
@@ -201,51 +196,31 @@
             'margin-left': 'auto',
             'text-align': 'right',
             'position': 'relative'
-          }).addClass('external-event');  // Add the 'external-event' class
-
-          event.text(e.title);  // Set the event's title as the text inside the div
-
-          // Create the remove button
-          var removeButton = $('<button class="remove-event-btn">×</button>');  // Create a button with "×"
+          }).addClass('external-event');  
+          event.text(e.title);
+          var removeButton = $('<button class="remove-event-btn">X</button>');  // Create a button with "×"
+          removeButton.attr("value", "helloworld")
           removeButton.css({
-            'color': '#fff',            
-            'width': '20px',
             'height': '20px',
-            'font-size': '14px',
+            'background-color': 'transparent',
+            'color': 'white',
+            'border': 'none',
+            'font-size': '20px',
             'text-align': 'center',
             'line-height': '16px',
-            'top': '5px',
-            'right': '5px',
-            'cursor': 'pointer',
             'position': 'absolute',
+            'top': '20%',
+            'right': '2px',
           });
-
-
-
-
 
           event.append(removeButton);
-
-          removeButton.on('click', function () {
-            alert(": hello remove.")
-            event.remove();
+          removeButton.on('click', function (event) {
+            var parentElement = $(this).parent();
+            request("http://127.0.0.1:5600/api/v1/event/common/delete", {"id": parentElement[0].id})
+            parentElement.remove();
           });
-
-          // Append the newly created event div to the events container
           eventsContainer.prepend(event);
         });
-
-
-
-
-
-
-
-
-
-
-
-
       };
 
       const Home = async () => {
@@ -354,31 +329,23 @@
             }
             request("http://127.0.0.1:5600/api/v1/event/update", data)
           }
-
           , eventContent: function (arg) {
             var deleteButton = document.createElement('button');
             deleteButton.classList.add('delete-button');
             deleteButton.innerText = '×'; // Unicode for "times" character (cross)
-
-            // Event listener to remove the event on button click
             deleteButton.addEventListener('click', function () {
               if (confirm('Are you sure you want to delete this event?')) {
                 request("http://127.0.0.1:5600/api/v1/event/delete", { "id": arg.event.id })
                 calendar.getEventById(arg.event.id).remove();
               }
             });
-
             var eventContent = document.createElement('div');
             eventContent.innerHTML = arg.event.title;
-            eventContent.style.position = 'relative'; // Ensure delete button positions correctly
-
-            // Append the delete button to the event content
+            eventContent.style.position = 'relative'; 
             eventContent.appendChild(deleteButton);
-
             return { domNodes: [eventContent] };
           },
         });
-
         calendar.render();
       }
 
@@ -402,6 +369,7 @@
         if (val.length == 0) {
           return;
         }
+
 
         var event = $('<div />');
         event.css({
