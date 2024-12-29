@@ -187,58 +187,53 @@
       }
 
       const FillEvents = (events) => {
-
-
-
         var eventsContainer = $("#external-events");
+        // Loop through each event and create a new div element for it
+        events?.map(e => {
+          var event = $('<div>');  // Create a new div element
+          event.attr("id", e.id);  // Set the id attribute of the event div
+          event.css({
+            'background-color': e.backgroundColor,
+            'border-color': e.borderColor,
+            'color': '#fff',
+            'display': 'flex',
+            'width': '100%',
+            'margin-left': 'auto',
+            'text-align': 'right',
+            'position': 'relative'
+          }).addClass('external-event');  // Add the 'external-event' class
 
-// Loop through each event and create a new div element for it
-events?.map(e => {
-    var event = $('<div>');  // Create a new div element
-    event.attr("id", e.id);  // Set the id attribute of the event div
-    event.css({
-        'background-color': e.backgroundColor,
-        'border-color': e.borderColor,
-        'color': '#fff'
-    }).addClass('external-event');  // Add the 'external-event' class
+          event.text(e.title);  // Set the event's title as the text inside the div
 
-    event.text(e.title);  // Set the event's title as the text inside the div
-
-    // Create the remove button
-    var removeButton = $('<button class="remove-event-btn">×</button>');  // Create a button with "×"
-    removeButton.css({
-        'background-color': 'red',
-        'color': 'white',
-        'border': 'none',
-        'border-radius': '50%',
-        'width': '20px',
-        'height': '20px',
-        'font-size': '14px',
-        'text-align': 'center',
-        'line-height': '16px',
-        'position': 'absolute',
-        'top': '5px',
-        'right': '5px',
-        'cursor': 'pointer'
-    });
-
-    // Append the remove button to the event div
-    event.append(removeButton);
-
-    // Add click event listener to remove the event
-    removeButton.on('click', function() {
-        // Remove the event div from the container
-        event.remove();
-
-        // Optionally, you can also remove the event data from your events array or database
-        // Example: removeEventById(e.id);
-    });
-
-    // Append the newly created event div to the events container
-    eventsContainer.prepend(event);
-});
+          // Create the remove button
+          var removeButton = $('<button class="remove-event-btn">×</button>');  // Create a button with "×"
+          removeButton.css({
+            'color': '#fff',            
+            'width': '20px',
+            'height': '20px',
+            'font-size': '14px',
+            'text-align': 'center',
+            'line-height': '16px',
+            'top': '5px',
+            'right': '5px',
+            'cursor': 'pointer',
+            'position': 'absolute',
+          });
 
 
+
+
+
+          event.append(removeButton);
+
+          removeButton.on('click', function () {
+            alert(": hello remove.")
+            event.remove();
+          });
+
+          // Append the newly created event div to the events container
+          eventsContainer.prepend(event);
+        });
 
 
 
@@ -251,25 +246,6 @@ events?.map(e => {
 
 
 
-
-
-        // var eventsContainer = $("#external-events");
-
-        // // Loop through each event and create a new div element for it
-        // events?.map(e => {
-        //   var event = $('<div>');  // Create a new div element
-        //   event.attr("id", e.id)
-        //   event.css({
-        //     'background-color': e.backgroundColor,
-        //     'border-color': e.borderColor,
-        //     'color': '#fff'
-        //   }).addClass('external-event');  // Add the 'external-event' class
-
-        //   event.text(e.title);  // Set the event's title as the text inside the div
-
-        //   // Append the newly created event div to the events container
-        //   eventsContainer.prepend(event);
-        // });
       };
 
       const Home = async () => {
@@ -277,8 +253,7 @@ events?.map(e => {
         if (resp && resp.data) {
           _events = resp.data.events || [];
           FillEvents(resp.data?.common_events)
-          console.log("API data result: ", resp.data, _events);
-          initializeCalendar(); 
+          initializeCalendar();
         } else {
           console.error("Failed to load events");
         }
@@ -365,7 +340,7 @@ events?.map(e => {
                 "end_at": moment(endDate, 'YYYY-MM-DD').format('YYYY-MM-DD')
               }
             }
-            request("http://localhost:5600/api/v1/event/update", data)
+            request("http://127.0.0.1:5600/api/v1/event/update", data)
           },
           eventResize: function (event, delta, revertFunc) {
             var startDate = event.event.start;
@@ -377,7 +352,7 @@ events?.map(e => {
                 "end_at": moment(endDate, 'YYYY-MM-DD').format('YYYY-MM-DD')
               }
             }
-            request("http://localhost:5600/api/v1/event/update", data)
+            request("http://127.0.0.1:5600/api/v1/event/update", data)
           }
 
           , eventContent: function (arg) {
@@ -388,7 +363,7 @@ events?.map(e => {
             // Event listener to remove the event on button click
             deleteButton.addEventListener('click', function () {
               if (confirm('Are you sure you want to delete this event?')) {
-                request("http://localhost:5600/api/v1/event/delete", { "id": arg.event.id })
+                request("http://127.0.0.1:5600/api/v1/event/delete", { "id": arg.event.id })
                 calendar.getEventById(arg.event.id).remove();
               }
             });
@@ -442,7 +417,7 @@ events?.map(e => {
           backgroundColor: currColor,
           borderColor: currColor,
         }
-        request("http://localhost:5600/api/v1/event/common/create", data)
+        request("http://127.0.0.1:5600/api/v1/event/common/create", data)
         $('#external-events').prepend(event);
 
         console.log("Event created: ", event);
