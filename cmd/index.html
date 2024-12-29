@@ -6,14 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calendar - Abdellah Oulahyane</title>
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
+  <link rel="stylesheet" href="./static/dist/css/google-fonts.css">
+
+
+  <!-- <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> -->
   <link rel="stylesheet" href="./static/plugins/fontawesome-free/css/all.min.css">
-  <!-- fullCalendar -->
   <link rel="stylesheet" href="./static/plugins/fullcalendar/main.css">
-  <!-- Theme style -->
+  
   <link rel="stylesheet" href="./static/dist/css/adminlte.min.css">
   <style>
     .delete-button {
@@ -172,7 +172,6 @@
           body: postData
         }).then(response => response.json())
           .then(data => {
-            console.log("then success : ", data);
             return data;
           })
           .catch((error) => {
@@ -198,7 +197,7 @@
             'position': 'relative'
           }).addClass('external-event');  
           event.text(e.title);
-          var removeButton = $('<button class="remove-event-btn">X</button>');  // Create a button with "×"
+          var removeButton = $('<button class="remove-event-btn">x</button>');  // Create a button with "×"
           removeButton.attr("value", "helloworld")
           removeButton.css({
             'height': '20px',
@@ -290,7 +289,6 @@
 
             var draggedEvent = info.draggedEl;  // The dragged element
             var backgroundColor = window.getComputedStyle(draggedEvent, null).getPropertyValue('background-color');
-            console.log("color back ", backgroundColor)
             const event = {
               title: title,
               backgroundColor: backgroundColor,
@@ -334,10 +332,9 @@
             deleteButton.classList.add('delete-button');
             deleteButton.innerText = '×'; // Unicode for "times" character (cross)
             deleteButton.addEventListener('click', function () {
-              if (confirm('Are you sure you want to delete this event?')) {
-                request("http://127.0.0.1:5600/api/v1/event/delete", { "id": arg.event.id })
-                calendar.getEventById(arg.event.id).remove();
-              }
+              request("http://127.0.0.1:5600/api/v1/event/delete", { "id": arg.event.id })
+              calendar.getEventById(arg.event.id).remove();
+              
             });
             var eventContent = document.createElement('div');
             eventContent.innerHTML = arg.event.title;
@@ -355,7 +352,6 @@
 
       $('#color-chooser > li > a').click(function (e) {
         e.preventDefault();
-        console.log(";line 247")
         currColor = $(this).css('color');
         $('#add-new-event').css({
           'background-color': currColor,
@@ -388,7 +384,6 @@
         request("http://127.0.0.1:5600/api/v1/event/common/create", data)
         $('#external-events').prepend(event);
 
-        console.log("Event created: ", event);
         ini_events(event);
         $('#new-event').val('');
       });

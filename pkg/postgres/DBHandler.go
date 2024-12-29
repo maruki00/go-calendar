@@ -22,7 +22,7 @@ func NewDBHandler(dsn string) *DBHandler {
 	var err error
 	for counter < TRIES {
 		counter++
-		slog.Info("try to connect to postgres server.")
+		slog.Info("try to connect to database.")
 		cnx, err = sql.Open("sqlite3", dsn)
 		if err != nil {
 			continue
@@ -30,7 +30,7 @@ func NewDBHandler(dsn string) *DBHandler {
 	}
 
 	if cnx == nil {
-		panic("Could not connect to postgres server!")
+		panic("Could not connect to database!")
 	}
 
 	return &DBHandler{

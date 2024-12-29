@@ -26,9 +26,9 @@ func (obj *EventRepository) Home(ctx context.Context) (any, error) {
 						FROM common_events`
 	sqlTodayEvents := `	SELECT id, title, start_at, end_at, background_color, border_color, all_day
 				 		FROM events 
-						WHERE strftime('%Y-%m', start_at) = strftime('%Y-%m', 'now') 
-						OR strftime('%Y-%m', end_at) = strftime('%Y-%m', 'now') 
-						OR (start_at <= 'now' AND end_at >= 'now')
+						-- WHERE strftime('%Y-%m', start_at) = strftime('%Y-%m', 'now') 
+						-- OR strftime('%Y-%m', end_at) = strftime('%Y-%m', 'now') 
+						-- OR (start_at <= 'now' AND end_at >= 'now')
 	`
 	rows1, err := obj.db.GetDB().Query(sqlCommunEvents)
 	if err != nil {

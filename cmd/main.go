@@ -49,7 +49,7 @@ func CORS1() gin.HandlerFunc {
 
 func main() {
 
-	db := pkg.NewDBHandler("../db/main.db")
+	db := pkg.NewDBHandler("/opt/calendar/db/main.db")
 	repo := repositories.NewEventRepository(db)
 	srv := services.NewEventService(repo)
 	ctl := controllers.NewEventController(srv)
