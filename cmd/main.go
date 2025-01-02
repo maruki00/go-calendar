@@ -55,9 +55,9 @@ func main() {
 	ctl := controllers.NewEventController(srv)
 	server := gin.Default()
 	server.Use(CORS())
-	html := template.Must(template.ParseFiles("index.html"))
+	html := template.Must(template.ParseFiles("/opt/calendar/index.html"))
 	server.SetHTMLTemplate(html)
-	server.Static("/static", "./static")
+	server.Static("/static", "/opt/calendar/static")
 
 	server.POST("/api/v1/event/create", ctl.Create)
 	server.POST("/api/v1/event/delete", ctl.Delete)
