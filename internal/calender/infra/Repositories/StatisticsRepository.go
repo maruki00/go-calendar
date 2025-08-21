@@ -23,4 +23,8 @@ func (obj *StatisticsRepository) GetStatistics(ctx context.Context, event domain
 	return nil, nil
 }
 
+func (obj *StatisticsRepository) GetProdactivity(ctx context.Context, event domain.CommonEvent) (any, error) {
+	return nil, nil
+}
+
 
