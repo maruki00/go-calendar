@@ -27,4 +27,6 @@ func (obj *StatisticsRepository) GetProdactivity(ctx context.Context, event doma
 	return nil, nil
 }
 
-
+func (obj *StatisticsRepository) GetStatisticsByDay(ctx context.Context, event domain.CommonEvent) (any, error) {
+	return nil, nil
+}
