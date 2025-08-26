@@ -9,17 +9,17 @@ import (
 	"strings"
 )
 
-type EventRepository struct {
+type StatisticsRepository struct {
 	db *pkg.DBHandler
 }
 
-func NewEventRepository(db *pkg.DBHandler) *EventRepository {
-	return &EventRepository{
+func NewStatisticsRepository(db *pkg.DBHandler) *StatisticsRepository {
+	return &StatisticsRepository{
 		db: db,
 	}
 }
 
-func (obj *EventRepository) Home(ctx context.Context) (any, error) {
+func (obj *StatisticsRepository) Home(ctx context.Context) (any, error) {
 	res := make(map[string]any, 0)
 
 	sqlCommunEvents := `SELECT *  
@@ -45,7 +45,7 @@ func (obj *EventRepository) Home(ctx context.Context) (any, error) {
 	return res, nil
 
 }
-func (obj *EventRepository) CreateCommonEvent(ctx context.Context, event domain.CommonEvent) (any, error) {
+func (obj *StatisticsRepository) CreateCommonEvent(ctx context.Context, event domain.CommonEvent) (any, error) {
 	sql := `
 						INSERT INTO common_events (id, title, background_color, border_color) 
 						VALUES (?,?,?,?)
