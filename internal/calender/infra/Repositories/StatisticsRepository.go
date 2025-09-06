@@ -19,11 +19,7 @@ func NewStatisticsRepository(db *pkg.DBHandler) *StatisticsRepository {
 	}
 }
 
-func (obj *StatisticsRepository) Home(ctx context.Context) (any, error) {
-	return nil, nil
-	
-}
-func (obj *StatisticsRepository) CreateCommonEvent(ctx context.Context, event domain.CommonEvent) (any, error) {
+func (obj *StatisticsRepository) GetStatistics(ctx context.Context, event domain.CommonEvent) (any, error) {
 	return nil, nil
 }
 
