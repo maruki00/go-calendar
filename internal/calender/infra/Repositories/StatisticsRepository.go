@@ -36,6 +36,4 @@ func (obj *StatisticsRepository) GetStatisticsByMonth(ctx context.Context, event
 	return nil, nil
 }
 
-func (obj *StatisticsRepository) GetStatistics(ctx context.Context, event domain.CommonEvent) (any, error) {
-	return nil, nil
-}
+
