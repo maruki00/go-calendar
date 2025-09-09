@@ -2,11 +2,8 @@ package repositories
 
 import (
 	"context"
-	"database/sql"
-	"fmt"
 	"go-calendar/internal/calender/domain"
 	pkg "go-calendar/pkg/postgres"
-	"strings"
 )
 
 type StatisticsRepository struct {
@@ -30,7 +27,6 @@ func (obj *StatisticsRepository) GetProdactivity(ctx context.Context, event doma
 func (obj *StatisticsRepository) GetStatisticsByDay(ctx context.Context, event domain.CommonEvent) (any, error) {
 	return nil, nil
 }
-
 
 func (obj *StatisticsRepository) GetStatisticsByMonth(ctx context.Context, event domain.CommonEvent) (any, error) {
 	return nil, nil
