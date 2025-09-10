@@ -16,19 +16,19 @@ func NewStatisticsRepository(db *pkg.DBHandler) *StatisticsRepository {
 	}
 }
 
-func (obj *StatisticsRepository) GetStatistics(ctx context.Context, event domain.CommonEvent) (any, error) {
+func (obj *StatisticsRepository) GetStatistics(ctx context.Context, domain any) (any, error) {
 	return nil, nil
 }
 
-func (obj *StatisticsRepository) GetProdactivity(ctx context.Context, event domain.CommonEvent) (any, error) {
+func (obj *StatisticsRepository) GetProdactivity(ctx context.Context, domain any) (any, error) {
 	return nil, nil
 }
 
-func (obj *StatisticsRepository) GetStatisticsByDay(ctx context.Context, event domain.CommonEvent) (any, error) {
+func (obj *StatisticsRepository) GetStatisticsByDay(ctx context.Context, domain any) (any, error) {
 	return nil, nil
 }
 
-func (obj *StatisticsRepository) GetStatisticsByMonth(ctx context.Context, event domain.CommonEvent) (any, error) {
+func (obj *StatisticsRepository) GetStatisticsByMonth(ctx context.Context, domain any) (any, error) {
 	return nil, nil
 }
 
