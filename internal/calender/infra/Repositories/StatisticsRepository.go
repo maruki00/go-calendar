@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"context"
-	"go-calendar/internal/calender/domain"
 	pkg "go-calendar/pkg/postgres"
 )
 
@@ -31,5 +30,3 @@ func (obj *StatisticsRepository) GetStatisticsByDay(ctx context.Context, domain 
 func (obj *StatisticsRepository) GetStatisticsByMonth(ctx context.Context, domain any) (any, error) {
 	return nil, nil
 }
-
-
