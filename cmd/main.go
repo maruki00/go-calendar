@@ -42,15 +42,14 @@ func CORS1() gin.HandlerFunc {
 			ctx.Header("Access-Control-Allow-Methods", strings.Join(methods, ","))
 			ctx.Status(200)
 			return
-		}
+		} 
 		ctx.Next()
 	}
 }
 
 func main() {
-
-	db := pkg.NewDBHandler("/opt/calendar/db/main.db")
-	repo := repositories.NewEventRepository(db)
+	db := pkg.NewDBHandler("
+	db := pkg.NewDBHandler("./db.db")
 	srv := services.NewEventService(repo)
 	ctl := controllers.NewEventController(srv)
 	server := gin.Default()
