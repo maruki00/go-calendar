@@ -48,7 +48,7 @@ func CORS1() gin.HandlerFunc {
 }
 
 func main() {
-	db := pkg.NewDBHandler("
+
 	db := pkg.NewDBHandler("./db.db")
 	srv := services.NewEventService(repo)
 	ctl := controllers.NewEventController(srv)
