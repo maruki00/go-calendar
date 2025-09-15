@@ -16,6 +16,8 @@ type DBHandler struct {
 	db *sql.DB
 }
 
+
+
 func NewDBHandler(dsn string) *DBHandler {
 	counter := 0
 	var cnx *sql.DB
