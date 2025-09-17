@@ -10,6 +10,3 @@ type App struct {
 	cfg     any
 	service services.EventService
 }
-
-
-
