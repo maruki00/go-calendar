@@ -12,13 +12,4 @@ type App struct {
 }
 
 
-/**
-  {
-    	// title: 'Lunch',
-    	// start: new Date(y, m, d, 12, 0),
-    	// end: new Date(y, m, d, 14, 0),
-    	// allDay: false,
-    	// backgroundColor: '#00c0ef', //Info (aqua)
-    	// borderColor: '#00c0ef' //Info (aqua)
-  }
-*/
+
