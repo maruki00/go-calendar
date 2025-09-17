@@ -11,6 +11,7 @@ type App struct {
 	service services.EventService
 }
 
+
 /**
   {
     	// title: 'Lunch',
