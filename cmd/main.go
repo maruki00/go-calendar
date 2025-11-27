@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"go-calendar/internal/calender/app/services"
-	repositories "go-calendar/internal/calender/infra/Repositories"
-	"go-calendar/internal/calender/userinterface/controllers"
+	"go-calendar/internal/event/app/services"
+	repositories "go-calendar/internal/event/infra/Repositories"
+	"go-calendar/internal/event/userinterface/controllers"
 	pkg "go-calendar/pkg/postgres"
 	"html/template"
 	"net/http"
@@ -42,7 +42,7 @@ func CORS1() gin.HandlerFunc {
 			ctx.Header("Access-Control-Allow-Methods", strings.Join(methods, ","))
 			ctx.Status(200)
 			return
-		} 
+		}
 		ctx.Next()
 	}
 }
@@ -50,6 +50,7 @@ func CORS1() gin.HandlerFunc {
 func main() {
 
 	db := pkg.NewDBHandler("./db.db")
+	repo := repositories.NewEventRepository(db)
 	srv := services.NewEventService(repo)
 	ctl := controllers.NewEventController(srv)
 	server := gin.Default()
