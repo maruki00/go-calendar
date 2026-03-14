@@ -1,8 +1,8 @@
 package app
 
 import (
-	"go-calendar/internal/calender/app/services"
-	repositories "go-calendar/internal/calender/infra/Repositories"
+	"go-calendar/internal/event/app/services"
+	repositories "go-calendar/internal/event/infra/Repositories"
 )
 
 type App struct {
