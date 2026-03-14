@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"go-calendar/internal/calender/app/services"
-	"go-calendar/internal/calender/userinterface/requests"
+	"go-calendar/internal/event/app/services"
+	"go-calendar/internal/event/userinterface/requests"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
