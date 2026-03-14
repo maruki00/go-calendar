@@ -2,9 +2,9 @@ package services
 
 import (
 	"context"
-	"go-calendar/internal/calender/domain"
-	repositories "go-calendar/internal/calender/infra/Repositories"
-	"go-calendar/internal/calender/userinterface/requests"
+	"go-calendar/internal/event/domain"
+	repositories "go-calendar/internal/event/infra/Repositories"
+	"go-calendar/internal/event/userinterface/requests"
 
 	"github.com/google/uuid"
 )
