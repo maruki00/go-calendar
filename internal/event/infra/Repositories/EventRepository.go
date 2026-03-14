@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"go-calendar/internal/calender/domain"
+	"go-calendar/internal/event/domain"
 	pkg "go-calendar/pkg/postgres"
 	"strings"
 )
