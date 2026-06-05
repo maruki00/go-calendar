@@ -2,15 +2,22 @@ package main
 
 import (
 	"fmt"
-	"go-calendar/internal/event/app/services"
-	repositories "go-calendar/internal/event/infra/Repositories"
-	"go-calendar/internal/event/userinterface/controllers"
+	"go-calendar/internal/calendar/app/services"
+	repositories "go-calendar/internal/calendar/infra/Repositories"
+	"go-calendar/internal/calendar/userinterface/controllers"
+	"go-calendar/internal/notifier/app"
 	pkg "go-calendar/pkg/postgres"
 	"html/template"
+	"log"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+)
+
+const (
+	HOST = "127.0.0.1"
+	PORT = "5600"
 )
 
 func CORS() gin.HandlerFunc {
@@ -35,7 +42,7 @@ func CORS() gin.HandlerFunc {
 func CORS1() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if ctx.Request.Method == http.MethodOptions {
-			ctx.Header("Access-Control-Allow-Origin", "http://127.0.0.1")
+			ctx.Header("Access-Control-Allow-Origin", HOST)
 			headers := []string{"Content-Type", "Authorization"}
 			ctx.Header("Access-Control-Allow-Headers", strings.Join(headers, ","))
 			methods := []string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"}
@@ -48,6 +55,11 @@ func CORS1() gin.HandlerFunc {
 }
 
 func main() {
+
+	_, err := app.Init()
+	if err != nil {
+		log.Fatalf("[ERROR] could not start notifier")
+	}
 
 	db := pkg.NewDBHandler("./db.db")
 	repo := repositories.NewEventRepository(db)
@@ -70,5 +82,5 @@ func main() {
 	})
 
 	fmt.Println("server running on :5600")
-	server.Run(":5600")
+	server.Run(fmt.Sprintf("%s:%s", HOST, PORT))
 }
