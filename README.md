@@ -15,9 +15,9 @@ This repository implements an event calendar service with endpoints for creating
 ## Architecture
 
 - `cmd/main.go` — Application entrypoint and HTTP route definitions
-- `internal/event/userinterface/controllers` — HTTP handlers
-- `internal/event/app/services` — Business logic service layer
-- `internal/event/infra/Repositories` — Database repository implementations
+- `internal/calendar/userinterface/controllers` — HTTP handlers
+- `internal/calendar/app/services` — Business logic service layer
+- `internal/calendar/infra/Repositories` — Database repository implementations
 - `pkg/postgres` — DB handler and connection logic
 - `db/static` — Static assets for calendar UI
 
