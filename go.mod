@@ -3,8 +3,11 @@ module go-calendar
 go 1.23.3
 
 require (
+	github.com/esiqveland/notify v0.13.3
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-playground/validator/v10 v10.23.0
+	github.com/godbus/dbus v4.1.0+incompatible
+	github.com/godbus/dbus/v5 v5.2.2
 	github.com/google/uuid v1.6.0
 	github.com/mattn/go-sqlite3 v1.14.24
 )
